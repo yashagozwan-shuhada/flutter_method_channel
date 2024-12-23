@@ -19,18 +19,23 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
+
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v2
-        with:
-          api-level: 30
-          build-tools: 30.0.3
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget tar unzip
+          wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
+          unzip commandlinetools-linux-6858069_latest.zip -d $ANDROID_HOME/cmdline-tools
+          mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+          
       - name: Start Android emulator
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
           sudo adduser `id -un` libvirt
           sudo adduser `id -un` kvm
-          sudo apt-get install -y android-sdk
           echo "no" | avdmanager create avd -n test -k "system-images;android-30;default;x86_64"
           $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -no-boot-anim -accel on &
       - name: Wait for Android emulator to finish booting
