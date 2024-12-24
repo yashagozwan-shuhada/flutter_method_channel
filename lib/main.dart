@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:image/image.dart' as img;
 
 void main() {
   runApp(const MyApp());
@@ -66,6 +68,14 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  Future<void> convertPngToJpg(String inputPath, String outputPath) async {
+    final image = img.decodeImage(File(inputPath).readAsBytesSync());
+    if (image != null) {
+      final jpg = img.encodeJpg(image);
+      File(outputPath).writeAsBytesSync(jpg);
+    }
   }
 
   @override
