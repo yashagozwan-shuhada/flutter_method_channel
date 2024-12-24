@@ -1,4 +1,9 @@
 # Flutter Method Channel
 
-## Implementation CI/CD
+## SDK Setup
 
+```text
+Flutter: 3.24.5
+```
+
+## Implementation CI/CD
